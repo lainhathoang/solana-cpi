@@ -12,6 +12,7 @@ import {
   getAssociatedTokenAddressSync,
   TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
+import { ASSOCIATED_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/utils/token";
 
 (async function main() {
   const connection = new anchor.web3.Connection(
@@ -29,6 +30,8 @@ import {
   const wallet = new anchor.Wallet(keypair);
   console.log("Using wallet: ", wallet.publicKey.toBase58());
 
+  // token0 : DONE token
+  // token1: WSOL - SOL
   const token0 = new anchor.web3.PublicKey(
     "E9FtswyfWvjPKG2eJvp6tcxVQGc6P7ZSpo3NvMtnqqtK"
   );
@@ -38,7 +41,7 @@ import {
   anchor.setProvider(provider);
 
   const programId = new anchor.web3.PublicKey(
-    "BbBXo1vyGPcUvZP2KasdJ7peobAU4zq5snUAxZYmQyS" // Devnet program ID from Anchor.toml
+    "61HQ6q3pczwKZK1d2bJTqKVkiX5bxLuEHjKUv9rxeXMT" // Devnet program ID from Anchor.toml
   );
   const program = new anchor.Program(idl as SolanaCpi);
 
@@ -60,11 +63,16 @@ import {
     false,
     TOKEN_PROGRAM_ID
   );
-  const creatorToken1 = getAssociatedTokenAddressSync(
+  const creatorToken1 = spl.getOrCreateAssociatedTokenAccount(
+    connection,
+    wallet.payer,
     token1,
     wallet.publicKey,
     false,
-    TOKEN_PROGRAM_ID
+    "confirmed",
+    undefined,
+    TOKEN_PROGRAM_ID,
+    ASSOCIATED_PROGRAM_ID
   );
 
   const authority = new PublicKey(
@@ -78,7 +86,7 @@ import {
         inputMint: token1,
         outputMint: token0,
         poolState,
-        userInputTokenAccount: creatorToken1,
+        userInputTokenAccount: (await creatorToken1).address,
         userOutputTokenAccount: creatorToken0,
         authority,
         ammConfig,

@@ -4,7 +4,7 @@ mod instructions;
 
 use instructions::*;
 
-declare_id!("BbBXo1vyGPcUvZP2KasdJ7peobAU4zq5snUAxZYmQyS");
+declare_id!("61HQ6q3pczwKZK1d2bJTqKVkiX5bxLuEHjKUv9rxeXMT");
 
 #[program]
 pub mod solana_cpi {
