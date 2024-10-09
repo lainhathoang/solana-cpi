@@ -57,11 +57,16 @@ import { ASSOCIATED_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/utils/token";
     "99AM9YAPUGUAvLwjQYVXE2UgkBGQGRv8rJD7LfrHqUiy"
   );
 
-  const creatorToken0 = getAssociatedTokenAddressSync(
+  const creatorToken0 = spl.getOrCreateAssociatedTokenAccount(
+    connection,
+    wallet.payer,
     token0,
     wallet.publicKey,
     false,
-    TOKEN_PROGRAM_ID
+    "confirmed",
+    undefined,
+    TOKEN_PROGRAM_ID,
+    ASSOCIATED_PROGRAM_ID
   );
   const creatorToken1 = spl.getOrCreateAssociatedTokenAccount(
     connection,
